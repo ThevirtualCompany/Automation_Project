@@ -62,4 +62,19 @@ fi
 dateLog=$(date +%Y%m%d%H%M%S)
 tar -cvf /tmp/$name-httpd-logs-$dateLog.tar /var/log/apache2
 aws s3 cp /tmp/$name-httpd-logs-$dateLog.tar  s3://upgrad-nithin
+inventoryFile=/var/www/html/inventory.html
+timestamp=$(date +%Y%m%d%H%M%S)
+
+if [ ! -f "$inventoryFile" ]
+then
+touch "$inventoryFile"
+echo "Log Type&emsp;&emsp;&emsp;&emsp;Time Created&emsp;&emsp;&emsp;&emsp;Type&emsp;&emsp;&emsp;&emsp;Size &emsp;<br>" >> "$inventoryFile"
+fi
+echo "<br>" >> $inventoryFile
+echo "<br>httpd-logs &nbsp;&nbsp;&nbsp;&nbsp; ${timestamp} &nbsp;&nbsp;&nbsp;&nbsp; tar &nbsp;&nbsp;&nbsp;&nbsp;&nbsp&nbsp; `du -h /tmp/${name}-httpd-logs-${timestamp}.tar | awk '{print $1}'`" >> /var/www/html/inventory.html
+
+
+cat /etc/cron.d/automation
+echo "* * * * * root /root/Automation_Project/automation.sh" >> /etc/cron.d/automation
+
 
